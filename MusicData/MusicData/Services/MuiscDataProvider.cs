@@ -29,6 +29,7 @@ namespace MusicData.Services
 
 
             var albumIndex = "";
+            var isComps = artistCollections.FindAll(a => a.IsPrimaryArtist == true);
 
             var response = new AlbumIndexResponse();
             response.StatusCode = System.Net.HttpStatusCode.OK;
