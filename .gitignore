@@ -10,9 +10,13 @@
 
 obj/*
 bin/*
+bin
+obj
 
 /Data/collection
 /Data/artist
 /Data/collection_match
 /Data/artist_collection
 
+MusicData/.vs/
+MusicData/MusicData/Data/
