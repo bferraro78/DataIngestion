@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using MusicData.Services;
 using MusicData.Services.Factory;
 using MusicData.Services.DataReader;
+using MusicData.Services.DataReader.DataHandlers;
 
 namespace MusicData
 {
@@ -38,8 +39,13 @@ namespace MusicData
             services.AddTransient<IMusicDataServiceFacade, MusicDataServiceFacade>();
             services.AddTransient<IMusicDataProvider, MusicDataProvider>();
             services.AddTransient<IMusicDataRetrieverFactory, MusicDataRetrieverFactory>();
-            services.AddScoped<FileDataRetriever>()
-            .AddScoped<IMusicDataProxy, FileDataRetriever>(s => s.GetService<FileDataRetriever>());
+            services.AddScoped<ArtistDataReader>()
+            .AddScoped<IMediaDataProxy, ArtistDataReader>(s => s.GetService<ArtistDataReader>());
+            services.AddSingleton<IDataHandler, ArtistDataHandler>();
+            services.AddSingleton<IDataHandler, ArtistCollectionDataHandler>();
+            services.AddSingleton<IDataHandler, CollectionDataHandler>();
+            services.AddSingleton<IDataHandler, CollectionMatchDataHandler>();
+
 
 
 

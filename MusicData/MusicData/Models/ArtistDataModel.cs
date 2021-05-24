@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace MusicData.Models.Response
+namespace MusicData.Models
 {
-    public class MusicDataResponse : BaseResponse
+    public class ArtistDataModel
     {
         public List<Artist> Artists { get; set; }
         public List<ArtistCollection> ArtistCollections { get; set; }
         public List<Collection> Collections { get; set; }
         public List<CollectionMatch> CollectionMatches { get; set; }
-
     }
 }

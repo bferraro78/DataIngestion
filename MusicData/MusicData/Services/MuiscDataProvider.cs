@@ -34,7 +34,10 @@ namespace MusicData.Services
 
 
                 var albumIndex = "beanpus";
-                var isComps = data.ArtistCollections.FindAll(a => a.IsPrimaryArtist == true);
+                var isPrimary = data.ArtistCollections.FindAll(a => a.IsPrimaryArtist == true);
+                var isComp = data.Collections.FindAll(a => a.IsCompilation == true);
+
+
 
                 // TODO - Create Album objectBusiness Logic 
 
