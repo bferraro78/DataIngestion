@@ -11,6 +11,11 @@ namespace MusicData.Models.Response
 
         }
 
-        public string AlbumElasticIndex { get; set; }
+        public Index Data { get; set; }
+    }
+
+    public class Index
+    { 
+        public string IndexUrl { get; set; }
     }
 }

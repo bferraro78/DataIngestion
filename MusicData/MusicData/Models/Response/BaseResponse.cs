@@ -13,7 +13,6 @@ namespace MusicData.Models.Response
         {
             StatusCode = statusCode;
         }
-
         public string ErrorMessage { get; set; }
         public HttpStatusCode StatusCode { get; set; }
 

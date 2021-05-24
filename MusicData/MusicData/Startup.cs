@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MusicData.Services;
+using MusicData.Services.Factory;
+using MusicData.Services.DataReader;
 
 namespace MusicData
 {
@@ -27,7 +29,6 @@ namespace MusicData
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -36,6 +37,11 @@ namespace MusicData
 
             services.AddTransient<IMusicDataServiceFacade, MusicDataServiceFacade>();
             services.AddTransient<IMusicDataProvider, MusicDataProvider>();
+            services.AddTransient<IMusicDataRetrieverFactory, MusicDataRetrieverFactory>();
+            services.AddScoped<FileDataRetriever>()
+            .AddScoped<IMusicDataProxy, FileDataRetriever>(s => s.GetService<FileDataRetriever>());
+
+
 
         }
 

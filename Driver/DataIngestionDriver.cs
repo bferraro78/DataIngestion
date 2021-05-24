@@ -1,5 +1,5 @@
 using System;
-using Driver.Src.DataExtract;
+using Driver.Src.Services;
 
 namespace Driver
 {
@@ -13,9 +13,8 @@ namespace Driver
 
         public void Run()
         {
-            Console.WriteLine("Goodbye cruel world!");
-
-
+            var elasticIndex = _musicService.GetAlbumIndex();
+            Console.WriteLine($"Here is your Album Index: {elasticIndex}");
         }
     }
 }

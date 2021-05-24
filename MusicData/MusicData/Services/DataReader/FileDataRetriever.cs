@@ -1,4 +1,5 @@
 using MusicData.Models;
+using MusicData.Models.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,15 +7,26 @@ using System.Linq;
 namespace MusicData.Services.DataReader
 {
 
-    public static class FileDataReader
+    public class FileDataRetriever : IMusicDataProxy
     {
         const char UNICODE_ENTRY_SPLIT = '\u0001';
         const char UNICODE_ENTRY_NEWLINE = '\u0002';
         const char SKIP_LINE = '#';
-        
+
         // TODO - unit test - exception reguarding bad file format?
 
-        public static List<Artist> GetArtist()
+        public MusicDataResponse GetMusicData()
+        {
+            var response = new MusicDataResponse();
+            response.Artists = GetArtist();
+            response.ArtistCollections = GetArtistCollections();
+            response.Collections = GetCollection();
+            response.CollectionMatches = GetMatchCollections();
+
+            return response;
+        }
+
+        public List<Artist> GetArtist()
         {
             int counter = 0;
             string line;
@@ -57,7 +69,7 @@ namespace MusicData.Services.DataReader
             return artists;
         }
 
-        public static List<ArtistCollection> GetArtistCollections()
+        public List<ArtistCollection> GetArtistCollections()
         {
             int counter = 0;
             string line;
@@ -104,7 +116,7 @@ namespace MusicData.Services.DataReader
             return artistCollections;
         }
 
-        public static List<CollectionMatch> GetMatchCollections()
+        public List<CollectionMatch> GetMatchCollections()
         {
             int counter = 0;
             string line;
@@ -145,7 +157,7 @@ namespace MusicData.Services.DataReader
             return collectionMatches;
         }
 
-        public static List<Collection> GetCollection()
+        public List<Collection> GetCollection()
         {
             int counter = 0;  
             string line;
