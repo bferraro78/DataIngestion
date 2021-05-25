@@ -30,13 +30,18 @@ namespace MusicData
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSeq();
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MusicData", Version = "v1" });
             });
 
-            services.AddTransient<IMusicDataServiceFacade, MusicDataServiceFacade>();
+            services.AddTransient<IMusicDataServiceFacade, MediaDataServiceFacade>();
             services.AddTransient<IMusicDataProvider, MusicDataProvider>();
             services.AddTransient<IMusicDataRetrieverFactory, MusicDataRetrieverFactory>();
             services.AddScoped<ArtistDataReader>()

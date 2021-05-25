@@ -11,7 +11,7 @@ namespace Driver.Src.Services
         string GetAlbumIndex();
     }
     
-    public class MusicService : IMusicService
+    public class MediaService : IMusicService
     {
         private readonly string _url;
         private readonly IConfiguration _config;
@@ -19,7 +19,7 @@ namespace Driver.Src.Services
 
 
         // http client to connect to MusicService
-        public MusicService(IConfiguration config, IDataIngestionWebClient client)
+        public MediaService(IConfiguration config, IDataIngestionWebClient client)
         {
             _config = config;
             _client = client;

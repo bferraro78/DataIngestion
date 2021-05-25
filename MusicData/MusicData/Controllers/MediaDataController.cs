@@ -10,12 +10,12 @@ namespace MusicData.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MusicDataController : ControllerBase
+    public class MediaDataController : ControllerBase
     {
-        private readonly ILogger<MusicDataController> _logger;
+        private readonly ILogger<MediaDataController> _logger;
         private readonly IMusicDataServiceFacade _serviceFacade;
 
-        public MusicDataController(IMusicDataServiceFacade serviceFacade, ILogger<MusicDataController> logger)
+        public MediaDataController(IMusicDataServiceFacade serviceFacade, ILogger<MediaDataController> logger)
         {
             _logger = logger;
             _serviceFacade = serviceFacade;
@@ -26,6 +26,7 @@ namespace MusicData.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public Task<AlbumIndexResponse> GetAlbumIndex()
         {
+            _logger.LogInformation("Getting Album Index...");
             var response =_serviceFacade.GetAlbumIndex();
             return Task.FromResult(response);
         }

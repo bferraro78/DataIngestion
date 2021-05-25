@@ -25,7 +25,7 @@ namespace Driver
             IServiceCollection services = new ServiceCollection();
 
             // var config = LoadConfiguration();
-            services.AddSingleton<IMusicService, MusicService>();
+            services.AddSingleton<IMusicService, MediaService>();
             services.AddSingleton<IDataIngestionWebClient, DataIngestionWebClient>();
 
 

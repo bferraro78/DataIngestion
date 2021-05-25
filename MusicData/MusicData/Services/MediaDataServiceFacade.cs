@@ -8,13 +8,13 @@ namespace MusicData.Services
         AlbumIndexResponse GetAlbumIndex();
     }
 
-    public class MusicDataServiceFacade : IMusicDataServiceFacade
+    public class MediaDataServiceFacade : IMusicDataServiceFacade
     {
-        private readonly ILogger<MusicDataServiceFacade> _logger;
+        private readonly ILogger<MediaDataServiceFacade> _logger;
         private readonly IMusicDataProvider _provider;
 
 
-        public MusicDataServiceFacade(ILogger<MusicDataServiceFacade> logger, IMusicDataProvider provider)
+        public MediaDataServiceFacade(ILogger<MediaDataServiceFacade> logger, IMusicDataProvider provider)
         {
             _logger = logger;
             _provider = provider;
