@@ -21,6 +21,8 @@ namespace MusicData.Services.Factory
         public IMediaDataProxy GetDataRetriever()
         {
             // TODO - retrieve this for either the google download service OR go with the file data retreiver
+            // Add config / create a placeholder google download service that would download and save files to the Data folder
+            // Pass in value and use this example as using another data retriever
             return (IMediaDataProxy)_serviceProvider.GetService(typeof(ArtistDataReader));
         }
     }

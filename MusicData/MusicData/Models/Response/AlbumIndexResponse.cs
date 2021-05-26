@@ -17,5 +17,7 @@ namespace MusicData.Models.Response
     public class Index
     { 
         public string IndexUrl { get; set; }
+        public string DashboardUrl { get; set; }
+
     }
 }

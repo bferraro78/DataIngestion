@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MusicData.Models
+﻿namespace MusicData.Models
 {
     public class Collection
     {

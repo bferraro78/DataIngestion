@@ -1,10 +1,14 @@
+using MediaData.Constants;
+using MediaData.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MusicData.Models;
 using MusicData.Models.Response;
-using MusicData.Services.DataReader;
 using MusicData.Services.Factory;
+using Nest;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MusicData.Services
 {
@@ -17,12 +21,16 @@ namespace MusicData.Services
     {
         private readonly ILogger<MusicDataProvider> _logger;
         private readonly IMusicDataRetrieverFactory _factory;
+        private readonly IBulkElasticDataInjector _bulkElasticDataInjector;
+        private readonly IConfiguration _configuration;
 
-
-        public MusicDataProvider(ILogger<MusicDataProvider> logger, IMusicDataRetrieverFactory factory)
+        public MusicDataProvider(ILogger<MusicDataProvider> logger, IMusicDataRetrieverFactory factory,
+            IBulkElasticDataInjector bulkElasticDataInjector, IConfiguration configuration)
         {
             _logger = logger;
             _factory = factory;
+            _bulkElasticDataInjector = bulkElasticDataInjector;
+            _configuration = configuration;
         }
 
 
@@ -32,73 +40,84 @@ namespace MusicData.Services
             try
             {
                 var proxy = _factory.GetDataRetriever();
+                proxy.SetHandlerType(HandlerTypeEnum.ARTIST);
                 var data = proxy.GetMusicData();
 
+                // Create Album objectBusiness Logic 
+                List<Album> albums = new();
 
-                var albumIndex = "beanpus";
-                //var isPrimary = data.ArtistCollections.FindAll(a => a.IsPrimaryArtist == true);
-                //var isComp = data.Collections.FindAll(a => a.IsCompilation == true);
-                //var isActualA = data.Artists.FindAll(a => a.IsActualArtist != true);
-
-
-                List<Album> albums = new List<Album>();
-
-                foreach (var artistCollection in data.ArtistCollections)
+                foreach (KeyValuePair<string, List<ArtistCollection>> kvp in data.ArtistCollections)
                 {
-                    var collection = data.Collections.Find(c => c.CollectionId.Equals(artistCollection.CollectionId));
-                    var cid = artistCollection.CollectionId;
+                    IEnumerable<string> f = new List<string>();
+                    Collection collection = null;
+                    CollectionMatch collectionMatch = null;
 
-                    var collectionMatch = data.CollectionMatches.Find(cm => cm.CollectionId.Equals(artistCollection.CollectionId));
-
-                    // Get all artists associated with the collection
-                    var artistsInvolved = data.ArtistCollections.FindAll(ac => ac.CollectionId.Equals(cid));
-                    if (artistsInvolved.Count > 1)
-                    {
-                        var f = 0;
-                        foreach (var g in artistsInvolved)
-                        { 
-                            var realArtist = data.Artists.Find(a => g.ArtistId.Equals(a.ArtistId));
-                            if (realArtist != null)
-                            {
-                                var gf = 0;
-                            }
-                        }
-
-                        
-
-
+                    if (data.Collections.ContainsKey(kvp.Key))
+                    { 
+                        collection = data.Collections[kvp.Key].FirstOrDefault();
                     }
 
-                    //var album = new Album
-                    //{
-                    //    Id = collection.CollectionId,
-                    //    Name = collection.Name,
-                    //    Url = collection.ViewUrl,
-                    //    Upc = collectionMatch.Upc,
-                    //    ReleaseDate = DateTime.Parse(collection.OriginalReleaseDate),
-                    //    IsCompilation = collection.IsCompilation,
-                    //    Label = collection.LabelStudio,
-                    //    ImageUrl = collection.ArtworkUrl
-                    //};
+                    if (data.CollectionMatches.ContainsKey(kvp.Key))
+                    {
+                        collectionMatch = data.CollectionMatches[kvp.Key].FirstOrDefault();
+                    }
 
-
+                    if (collection != null)
+                    {
+                        albums.Add(new Album
+                        {
+                            Id = (string.IsNullOrEmpty(collection.CollectionId)) ? string.Empty : collection.CollectionId,
+                            Name = (string.IsNullOrEmpty(collection.Name)) ? string.Empty : collection.Name,
+                            Url = (string.IsNullOrEmpty(collection.ViewUrl)) ? string.Empty : collection.ViewUrl,
+                            Upc = (string.IsNullOrEmpty(collectionMatch.Upc)) ? string.Empty : collectionMatch.Upc,
+                            ReleaseDate = (string.IsNullOrEmpty(collection.OriginalReleaseDate)) ? DateTime.MinValue : DateTime.Parse(collection.OriginalReleaseDate),
+                            IsCompilation = collection.IsCompilation,
+                            Label = (string.IsNullOrEmpty(collection.LabelStudio)) ? string.Empty : collection.LabelStudio,
+                            ImageUrl = (string.IsNullOrEmpty(collection.ArtworkUrl)) ? string.Empty : collection.ArtworkUrl
+                        });
+                    }
                 }
 
-                // TODO - Create Album objectBusiness Logic 
+                foreach (var album in albums)
+                {
+                    // Get all artists associated with the collection
 
+                    if (data.ArtistCollections.ContainsKey(album.Id))
+                    { 
+                        var artistsInvolved = data.ArtistCollections[album.Id];
+                        artistsInvolved = artistsInvolved.Distinct().ToList();
+                        var artists = new List<ArtistAlbum>();
+                        foreach (var artistInvolved in artistsInvolved)
+                        {
+                            var artistId = artistInvolved.ArtistId;
+                            if (data.Artists.ContainsKey(artistId))
+                            { 
+                                var existingArtist = data.Artists[artistId].FirstOrDefault(); // Only one artistId associated to an artist
+                                artists.Add(new ArtistAlbum { Id = artistId, Name = existingArtist.Name });
+                            }
+                        }
+                        album.Artists = artists;
+                    }
+                }
 
-                // TODO - push album list object to an elastic index
+                albums = albums.Where(album => album.Artists.Count > 0).ToList(); // Remove any albums with no artist data
+                _bulkElasticDataInjector.InjectAlbums(albums);
 
-
+                // unit testable model converter (interface for convert to album)
                 // TODO - map errors
+                // TODO - unit tets
 
                 response.StatusCode = System.Net.HttpStatusCode.OK;
-                response.Data = new Models.Response.Index();
-                response.Data.IndexUrl = albumIndex;
+                response.Data = new Models.Response.Index
+                {
+                    IndexUrl = _configuration["ElasticConfiguration:Uri"],
+                    DashboardUrl = _configuration["ElasticConfiguration:DashbaordUri"]
+                };
             }
             catch (Exception ex)
             {
                 // Log Stack trace exception
+                _logger.LogError(ex, "Failed to create Ablbum Index");
                 response.ErrorMessage = ex.Message;
                 response.StatusCode = System.Net.HttpStatusCode.InternalServerError;
             }
@@ -106,10 +125,7 @@ namespace MusicData.Services
             return response;
         }
 
-        private void MapData(ArtistCollection artistCollection, List<Album> albums)
-        { 
-        
-        }
+
 
     }
 }

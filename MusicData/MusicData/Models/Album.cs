@@ -25,7 +25,7 @@ namespace MusicData.Models
         public string Label { get; set; }
         [DataMember(Name="imageUrl")]
         public string ImageUrl { get; set; }
-        [DataMember]
+        [DataMember(Name="artists")]
         public List<ArtistAlbum> Artists { get; set; }
 
 

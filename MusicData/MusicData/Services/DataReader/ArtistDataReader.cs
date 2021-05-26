@@ -1,3 +1,4 @@
+using MediaData.Constants;
 using MusicData.Models;
 using MusicData.Models.Response;
 using MusicData.Services.DataReader.DataHandlers;
@@ -10,12 +11,17 @@ namespace MusicData.Services.DataReader
 
     public class ArtistDataReader : IMediaDataProxy
     {
-        // TODO - unit test - exception reguarding bad file format?
-        private IEnumerable<IDataHandler> _handlers;
+        private readonly IEnumerable<IDataHandler> _handlers;
+        protected HandlerTypeEnum HANDLER_TYPE;
 
         public ArtistDataReader(IEnumerable<IDataHandler> handlers)
         {
             _handlers = handlers;
+        }
+
+        public void SetHandlerType(HandlerTypeEnum type)
+        {
+            HANDLER_TYPE = type;
         }
 
         public ArtistDataModel GetMusicData()
@@ -23,7 +29,10 @@ namespace MusicData.Services.DataReader
             var model = new ArtistDataModel();
             foreach (IDataHandler handler in _handlers)
             {
-                handler.Handle(ref model);
+                if (handler.GetHandleType() == HANDLER_TYPE || handler.GetHandleType() == HandlerTypeEnum.DEFAULT)
+                { 
+                    handler.Handle(ref model);
+                }
             }
             return model;
         }

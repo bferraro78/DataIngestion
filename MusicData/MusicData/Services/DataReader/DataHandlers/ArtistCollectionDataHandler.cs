@@ -1,4 +1,6 @@
-﻿using MusicData.Models;
+﻿using MediaData.Constants;
+using Microsoft.Extensions.Logging;
+using MusicData.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +10,22 @@ namespace MusicData.Services.DataReader.DataHandlers
 {
     public class ArtistCollectionDataHandler : DataHandler
     {
+        private readonly ILogger<ArtistCollectionDataHandler> _logger;
+        protected new HandlerTypeEnum HANDLER_TYPE = HandlerTypeEnum.ARTIST;
+        public ArtistCollectionDataHandler(ILogger<ArtistCollectionDataHandler> logger)
+        {
+            _logger = logger;
+        }
+
         public override void Handle(ref ArtistDataModel model)
         {
-            int counter = 0;
             string line;
 
             // Read the file and display it line by line.  
             string currentDir = Environment.CurrentDirectory+"\\Data\\artist_collection";
             System.IO.StreamReader file =
-                new System.IO.StreamReader(currentDir);
-            List<ArtistCollection> artistCollections = new List<ArtistCollection>();
+                new(currentDir);
+            IDictionary<string, List<ArtistCollection>> artistCollections = new Dictionary<string, List<ArtistCollection>>();
 
             while ((line = file.ReadLine()) != null)
             {
@@ -27,31 +35,42 @@ namespace MusicData.Services.DataReader.DataHandlers
                     {
                         line = line.Trim(UNICODE_ENTRY_NEWLINE);
                         string[] dataEntry = line.Split(UNICODE_ENTRY_SPLIT);
-                        var artistCollectionEntry = new ArtistCollection();
-
-                        artistCollectionEntry.ExportDate = (string.IsNullOrEmpty(dataEntry[0])) ? null : dataEntry[0];
-                        artistCollectionEntry.ArtistId = (string.IsNullOrEmpty(dataEntry[1])) ? null : dataEntry[1];
-                        artistCollectionEntry.CollectionId = (string.IsNullOrEmpty(dataEntry[2])) ? null : dataEntry[2];
-                        artistCollectionEntry.IsPrimaryArtist = string.Equals(dataEntry[3], "1");
-
-                        if (string.Equals(dataEntry[3], "1"))
+                        var artistCollectionEntry = new ArtistCollection
                         {
-                            var f = 5;
+                            ExportDate = (string.IsNullOrEmpty(dataEntry[0])) ? null : dataEntry[0],
+                            ArtistId = (string.IsNullOrEmpty(dataEntry[1])) ? null : dataEntry[1],
+                            CollectionId = (string.IsNullOrEmpty(dataEntry[2])) ? null : dataEntry[2],
+                            IsPrimaryArtist = string.Equals(dataEntry[3], "1"),
+                            RoleId = (string.IsNullOrEmpty(dataEntry[4])) ? null : dataEntry[4]
+                        };
+                        if (artistCollections.ContainsKey(artistCollectionEntry.CollectionId))
+                        {
+                            artistCollections[artistCollectionEntry.CollectionId].Add(artistCollectionEntry);
                         }
-
-                        artistCollectionEntry.RoleId = (string.IsNullOrEmpty(dataEntry[4])) ? null : dataEntry[4];
-
-                        artistCollections.Add(artistCollectionEntry);
-                        counter++;
+                        else
+                        {
+                            artistCollections.Add(artistCollectionEntry.CollectionId, new List<ArtistCollection> { artistCollectionEntry });
+                        }
                     }
                     catch (IndexOutOfRangeException ex)
                     {
+                        _logger.LogError(ex, "Bad Data Line Format");
+                        continue;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Unable to Read ArtistCollection Data");
                         continue;
                     }
                 }
             }
             file.Close();
             model.ArtistCollections = artistCollections;
+        }
+
+        public override HandlerTypeEnum GetHandleType()
+        {
+            return HANDLER_TYPE;
         }
     }
 }

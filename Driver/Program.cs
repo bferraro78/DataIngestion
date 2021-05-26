@@ -32,7 +32,7 @@ namespace Driver
             // required to run the application
             services.AddTransient<DataIngestionDriver>();
 
-            var myEnv = System.Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var myEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile($"appsettings.{myEnv}.json", true, true).Build();
 

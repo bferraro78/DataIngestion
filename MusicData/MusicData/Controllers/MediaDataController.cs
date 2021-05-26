@@ -22,6 +22,7 @@ namespace MusicData.Controllers
         }
 
         [HttpGet]
+        [Route("GetAlbumIndex")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public Task<AlbumIndexResponse> GetAlbumIndex()

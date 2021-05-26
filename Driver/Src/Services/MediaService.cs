@@ -30,7 +30,7 @@ namespace Driver.Src.Services
             if (_config["AppSettings:DataService"].Equals("LocalFile"))
             {
                 var requestUrl = _config["AppSettings:LocalFileServiceUrl"];
-                var indexResponse = _client.Get<IndexResponse>($"{requestUrl}/MusicData");
+                var indexResponse = _client.Get<IndexResponse>($"{requestUrl}/MediaData/GetAlbumIndex");
 
                 if (string.IsNullOrEmpty(indexResponse.ErrorMessage) && indexResponse.Data != null)
                 {
