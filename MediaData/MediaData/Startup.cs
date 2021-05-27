@@ -30,7 +30,6 @@ namespace MusicData
                 loggingBuilder.AddSeq();
             });
 
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -43,10 +42,13 @@ namespace MusicData
             services.AddTransient<IBulkElasticDataInjector, BulkElasticDataInjector>();
             services.AddScoped<ArtistDataReader>()
             .AddScoped<IMediaDataProxy, ArtistDataReader>(s => s.GetService<ArtistDataReader>());
-            services.AddSingleton<IDataHandler, ArtistDataHandler>();
-            services.AddSingleton<IDataHandler, ArtistCollectionDataHandler>();
-            services.AddSingleton<IDataHandler, CollectionDataHandler>();
-            services.AddSingleton<IDataHandler, CollectionMatchDataHandler>();
+
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+
+            //services.AddSingleton<IDataHandler, ArtistDataHandler>();
+            //services.AddSingleton<IDataHandler, ArtistCollectionDataHandler>();
+            //services.AddSingleton<IDataHandler, CollectionDataHandler>();
+            //services.AddSingleton<IDataHandler, CollectionMatchDataHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

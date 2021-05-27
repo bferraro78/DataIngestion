@@ -9,16 +9,26 @@ using System.Threading.Tasks;
 
 namespace MusicData.Services.DataReader.DataHandlers
 {
-    public class ArtistDataHandler : DataHandler
+    public class ArtistDataHandler
     {
-        private readonly ILogger<ArtistDataHandler> _logger;
+        private ILogger<ArtistDataHandler> _logger;
         protected new HandlerTypeEnum HANDLER_TYPE = HandlerTypeEnum.ARTIST;
+        protected const char UNICODE_ENTRY_SPLIT = '\u0001';
+        protected const char UNICODE_ENTRY_NEWLINE = '\u0002';
+        protected const char SKIP_LINE = '#';
 
         public ArtistDataHandler(ILogger<ArtistDataHandler> logger)
         {
             _logger = logger;
         }
-        public override void Handle(ref ArtistDataModel model)
+
+        public  Task<IDictionary<string, List<Artist>>> Handle()
+        {
+            return Task.Run(() => GetArtists());
+        }
+
+
+        private Task<IDictionary<string, List<Artist>>> GetArtists()
         {
             string line;
 
@@ -30,7 +40,7 @@ namespace MusicData.Services.DataReader.DataHandlers
 
             while ((line = file.ReadLine()) != null)
             {
-                if (!string.Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
+                if (!Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
                 {
                     try
                     {
@@ -67,9 +77,9 @@ namespace MusicData.Services.DataReader.DataHandlers
                 }
             }
             file.Close();
-            model.Artists = artists;
+            return Task.FromResult(artists);
         }
-        public override HandlerTypeEnum GetHandleType()
+        public HandlerTypeEnum GetHandleType()
         {
             return HANDLER_TYPE;
         }

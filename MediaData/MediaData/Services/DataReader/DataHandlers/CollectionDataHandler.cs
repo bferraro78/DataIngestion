@@ -8,19 +8,27 @@ using System.Threading.Tasks;
 
 namespace MusicData.Services.DataReader.DataHandlers
 {
-    public class CollectionDataHandler: DataHandler
+    public class CollectionDataHandler
     {
-        private readonly ILogger<CollectionDataHandler> _logger;
+        private ILogger<CollectionDataHandler> _logger;
         protected new HandlerTypeEnum HANDLER_TYPE = HandlerTypeEnum.ARTIST;
+        protected const char UNICODE_ENTRY_SPLIT = '\u0001';
+        protected const char UNICODE_ENTRY_NEWLINE = '\u0002';
+        protected const char SKIP_LINE = '#';
 
         public CollectionDataHandler(ILogger<CollectionDataHandler> logger)
         {
             _logger = logger;
         }
-        public override void Handle(ref ArtistDataModel model)
+
+        public Task<IDictionary<string, List<Collection>>> Handle()
+        {
+            return Task.Run(() => GetCollections());
+        }
+
+        private Task<IDictionary<string, List<Collection>>> GetCollections()
         {
             string line;
-
 
             // Read the file and display it line by line.  
             string currentDir = Environment.CurrentDirectory + "\\Data\\Collection";
@@ -30,7 +38,7 @@ namespace MusicData.Services.DataReader.DataHandlers
 
             while ((line = file.ReadLine()) != null)
             {
-                if (!string.Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
+                if (!Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
                 {
                     try
                     {
@@ -80,9 +88,10 @@ namespace MusicData.Services.DataReader.DataHandlers
                 }
             }
             file.Close();
-            model.Collections = collections;
+            return Task.FromResult(collections);
         }
-        public override HandlerTypeEnum GetHandleType()
+
+        public HandlerTypeEnum GetHandleType()
         {
             return HANDLER_TYPE;
         }

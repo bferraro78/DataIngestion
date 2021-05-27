@@ -15,10 +15,10 @@ bin/*
 bin
 obj
 
-/Data/collection
-/Data/artist
-/Data/collection_match
-/Data/artist_collection
+collection
+artist
+collection_match
+artist_collection
 
 MusicData/.vs/
 MusicData/MusicData/Data/

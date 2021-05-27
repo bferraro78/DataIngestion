@@ -12,12 +12,18 @@ namespace MusicData.Services.DataReader.DataHandlers
     {
         private readonly ILogger<ArtistCollectionDataHandler> _logger;
         protected new HandlerTypeEnum HANDLER_TYPE = HandlerTypeEnum.ARTIST;
+
         public ArtistCollectionDataHandler(ILogger<ArtistCollectionDataHandler> logger)
         {
             _logger = logger;
         }
 
-        public override void Handle(ref ArtistDataModel model)
+        public Task<IDictionary<string, List<ArtistCollection>>> Handle()
+        {
+            return Task.Run(() => GetArtistCollections());
+        }
+
+        private Task<IDictionary<string, List<ArtistCollection>>> GetArtistCollections()
         {
             string line;
 
@@ -29,7 +35,7 @@ namespace MusicData.Services.DataReader.DataHandlers
 
             while ((line = file.ReadLine()) != null)
             {
-                if (!string.Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
+                if (!Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
                 {
                     try
                     {
@@ -65,12 +71,12 @@ namespace MusicData.Services.DataReader.DataHandlers
                 }
             }
             file.Close();
-            model.ArtistCollections = artistCollections;
+            return Task.FromResult(artistCollections);
         }
 
-        public override HandlerTypeEnum GetHandleType()
-        {
-            return HANDLER_TYPE;
-        }
+        //public override HandlerTypeEnum GetHandleType()
+        //{
+        //    return HANDLER_TYPE;
+        //}
     }
 }

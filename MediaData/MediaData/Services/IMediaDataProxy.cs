@@ -6,6 +6,7 @@ namespace MusicData.Services
 {
     public interface IMediaDataProxy
     {
+        //ArtistDataModel GetMusicData();
         ArtistDataModel GetMusicData();
         void SetHandlerType(HandlerTypeEnum type);
     }

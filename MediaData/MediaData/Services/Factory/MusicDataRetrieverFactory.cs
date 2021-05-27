@@ -1,4 +1,5 @@
-﻿using MusicData.Services.DataReader;
+﻿using MediaData.Constants;
+using MusicData.Services.DataReader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace MusicData.Services.Factory
 {
     public interface IMusicDataRetrieverFactory
     {
-        IMediaDataProxy GetDataRetriever();
+        IMediaDataProxy GetDataRetriever(DataReaderTypeEnum dataReaderType);
     }
     public class MusicDataRetrieverFactory : IMusicDataRetrieverFactory
     {
@@ -18,12 +19,17 @@ namespace MusicData.Services.Factory
             _serviceProvider = serviceProvider;
         }
 
-        public IMediaDataProxy GetDataRetriever()
+        public IMediaDataProxy GetDataRetriever(DataReaderTypeEnum dataReaderType)
         {
-            // TODO - retrieve this for either the google download service OR go with the file data retreiver
-            // Add config / create a placeholder google download service that would download and save files to the Data folder
-            // Pass in value and use this example as using another data retriever
-            return (IMediaDataProxy)_serviceProvider.GetService(typeof(ArtistDataReader));
+            if (dataReaderType == DataReaderTypeEnum.ALBUM_DATA)
+            {
+                return (IMediaDataProxy)_serviceProvider.GetService(typeof(ArtistDataReader));
+            }
+            else
+            {
+                // Insert Default Data Reader Type (sticking with Artist Data reader for project sake)
+                return (IMediaDataProxy)_serviceProvider.GetService(typeof(ArtistDataReader));
+            }
         }
     }
 }

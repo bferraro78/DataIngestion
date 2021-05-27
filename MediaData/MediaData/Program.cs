@@ -18,6 +18,7 @@ namespace MusicData
                     $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
                     optional: true)
                 .Build();
+
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
@@ -28,6 +29,7 @@ namespace MusicData
                 .Enrich.WithProperty("Environment", environment)
                 .ReadFrom.Configuration(configuration)
                 .CreateLogger();
+
             CreateHostBuilder(args).Build().Run();
         }
 

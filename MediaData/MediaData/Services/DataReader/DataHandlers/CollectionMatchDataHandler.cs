@@ -17,7 +17,13 @@ namespace MusicData.Services.DataReader.DataHandlers
         {
             _logger = logger;
         }
-        public override void Handle(ref ArtistDataModel model)
+
+        public Task<IDictionary<string, List<CollectionMatch>>> Handle()
+        {
+            return Task.Run(() => GetCollectionsMatches());
+        }
+
+        private Task<IDictionary<string, List<CollectionMatch>>> GetCollectionsMatches()
         {
             string line;
 
@@ -29,7 +35,7 @@ namespace MusicData.Services.DataReader.DataHandlers
 
             while ((line = file.ReadLine()) != null)
             {
-                if (!string.Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
+                if (!Equals(line.First(), SKIP_LINE)) // Skip Table MetaData
                 {
                     try
                     {
@@ -66,9 +72,10 @@ namespace MusicData.Services.DataReader.DataHandlers
                 }
             }
             file.Close();
-            model.CollectionMatches = collectionMatches;
+            return Task.FromResult(collectionMatches);
         }
-        public override HandlerTypeEnum GetHandleType()
+
+        public HandlerTypeEnum GetHandleType()
         {
             return HANDLER_TYPE;
         }
