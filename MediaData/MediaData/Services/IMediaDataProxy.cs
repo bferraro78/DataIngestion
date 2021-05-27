@@ -1,13 +1,11 @@
 ﻿using MediaData.Constants;
-using MusicData.Models;
+using MediaData.Models;
 using System.Threading.Tasks;
 
-namespace MusicData.Services
+namespace MediaData.Services
 {
     public interface IMediaDataProxy
     {
-        //ArtistDataModel GetMusicData();
-        ArtistDataModel GetMusicData();
-        void SetHandlerType(HandlerTypeEnum type);
+        ArtistDataModel GetMediaData();
     }
 }

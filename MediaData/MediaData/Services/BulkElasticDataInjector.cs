@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MusicData.Models;
+using MediaData.Models;
 using Nest;
 using System;
 using System.Collections.Generic;

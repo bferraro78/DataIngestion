@@ -1,49 +1,36 @@
 using MediaData.Constants;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MusicData.Models;
-using MusicData.Models.Response;
-using MusicData.Services.DataReader.DataHandlers;
+using MediaData.Models;
+using MediaData.Models.Response;
+using MediaData.Services.DataReader.DataHandlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicData.Services.DataReader
+namespace MediaData.Services.DataReader
 {
 
     public class ArtistDataReader : IMediaDataProxy
     {
-        private readonly IEnumerable<IDataHandler> _handlers;
         private ILoggerFactory _loggerFactory;
-        protected HandlerTypeEnum HANDLER_TYPE;
+        private readonly IConfiguration _configuration;
 
-        public ArtistDataReader(ILoggerFactory loggerFactory)
+        public ArtistDataReader(ILoggerFactory loggerFactory, IConfiguration configuration)
         {
-            //_handlers = handlers;
+            _configuration = configuration;
             _loggerFactory = loggerFactory;
         }
 
-        public void SetHandlerType(HandlerTypeEnum type)
-        {
-            HANDLER_TYPE = type;
-        }
-
-        public ArtistDataModel GetMusicData()
+        public ArtistDataModel GetMediaData()
         {
             var model = new ArtistDataModel();
-            //foreach (IDataHandler handler in _handlers)
-            //{
-            //    if (handler.GetHandleType() == HANDLER_TYPE || handler.GetHandleType() == HandlerTypeEnum.DEFAULT)
-            //    { 
-            //        handler.Handle(ref model);
-            //    }
-            //}
 
-
-            Task<IDictionary<string, List<Collection>>> readCollectionsTask = new CollectionDataHandler(_loggerFactory.CreateLogger<CollectionDataHandler>()).Handle();
-            Task<IDictionary<string, List<Artist>>> readArtistsTask = new ArtistDataHandler(_loggerFactory.CreateLogger<ArtistDataHandler>()).Handle();
-            Task<IDictionary<string, List<ArtistCollection>>> readArtistCollectionsTask = new ArtistCollectionDataHandler(_loggerFactory.CreateLogger<ArtistCollectionDataHandler>()).Handle();
-            Task<IDictionary<string, List<CollectionMatch>>> readCollectionMacthesTask = new CollectionMatchDataHandler(_loggerFactory.CreateLogger<CollectionMatchDataHandler>()).Handle();
+            Task<IDictionary<string, List<Collection>>> readCollectionsTask = new CollectionDataHandler(_loggerFactory.CreateLogger<CollectionDataHandler>()).Handle(_configuration["DataLocation:collectionData"]);
+            Task<IDictionary<string, List<Artist>>> readArtistsTask = new ArtistDataHandler(_loggerFactory.CreateLogger<ArtistDataHandler>()).Handle(_configuration["DataLocation:artistData"]);
+            Task<IDictionary<string, List<ArtistCollection>>> readArtistCollectionsTask = new ArtistCollectionDataHandler(_loggerFactory.CreateLogger<ArtistCollectionDataHandler>()).Handle(_configuration["DataLocation:artistCollectionData"]);
+            Task<IDictionary<string, List<CollectionMatch>>> readCollectionMacthesTask = new CollectionMatchDataHandler(_loggerFactory.CreateLogger<CollectionMatchDataHandler>()).Handle(_configuration["DataLocation:collectionMatchData"]);
 
             Task[] tasks = new Task[] { readCollectionsTask, readArtistsTask, readArtistCollectionsTask, readCollectionMacthesTask };
             Task.WaitAll(tasks);

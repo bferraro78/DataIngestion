@@ -1,20 +1,20 @@
 ﻿using MediaData.Constants;
-using MusicData.Services.DataReader;
+using MediaData.Services.DataReader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicData.Services.Factory
+namespace MediaData.Services.Factory
 {
-    public interface IMusicDataRetrieverFactory
+    public interface IMediaDataRetrieverFactory
     {
         IMediaDataProxy GetDataRetriever(DataReaderTypeEnum dataReaderType);
     }
-    public class MusicDataRetrieverFactory : IMusicDataRetrieverFactory
+    public class MediaDataRetrieverFactory : IMediaDataRetrieverFactory
     {
         private readonly IServiceProvider _serviceProvider;
-        public MusicDataRetrieverFactory(IServiceProvider serviceProvider)
+        public MediaDataRetrieverFactory(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }

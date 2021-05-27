@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MusicData.Models
+namespace MediaData.Models
 {
     public class ArtistDataModel
     {

@@ -1,37 +1,33 @@
 ﻿using MediaData.Constants;
 using Microsoft.Extensions.Logging;
-using MusicData.Models;
+using MediaData.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicData.Services.DataReader.DataHandlers
+namespace MediaData.Services.DataReader.DataHandlers
 {
-    public class CollectionDataHandler
+    public class CollectionDataHandler : DataHandler
     {
         private ILogger<CollectionDataHandler> _logger;
-        protected new HandlerTypeEnum HANDLER_TYPE = HandlerTypeEnum.ARTIST;
-        protected const char UNICODE_ENTRY_SPLIT = '\u0001';
-        protected const char UNICODE_ENTRY_NEWLINE = '\u0002';
-        protected const char SKIP_LINE = '#';
 
         public CollectionDataHandler(ILogger<CollectionDataHandler> logger)
         {
             _logger = logger;
         }
 
-        public Task<IDictionary<string, List<Collection>>> Handle()
+        public Task<IDictionary<string, List<Collection>>> Handle(string dataLocation)
         {
-            return Task.Run(() => GetCollections());
+            return Task.Run(() => GetCollections(dataLocation));
         }
 
-        private Task<IDictionary<string, List<Collection>>> GetCollections()
+        private Task<IDictionary<string, List<Collection>>> GetCollections(string dataLocation)
         {
             string line;
 
             // Read the file and display it line by line.  
-            string currentDir = Environment.CurrentDirectory + "\\Data\\Collection";
+            string currentDir = Environment.CurrentDirectory + dataLocation;
             System.IO.StreamReader file =
                 new(currentDir);
             IDictionary<string, List<Collection>> collections = new Dictionary<string, List<Collection>>();
@@ -89,11 +85,6 @@ namespace MusicData.Services.DataReader.DataHandlers
             }
             file.Close();
             return Task.FromResult(collections);
-        }
-
-        public HandlerTypeEnum GetHandleType()
-        {
-            return HANDLER_TYPE;
         }
     }
 }

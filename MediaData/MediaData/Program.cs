@@ -5,7 +5,7 @@ using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System;
 
-namespace MusicData
+namespace MediaData
 {
     public class Program
     {

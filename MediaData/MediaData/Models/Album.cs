@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace MusicData.Models
+namespace MediaData.Models
 {
     [DataContract]
     public class Album

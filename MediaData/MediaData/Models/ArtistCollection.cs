@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MusicData.Models
+namespace MediaData.Models
 {
     public class ArtistCollection : IEquatable<ArtistCollection>
     {

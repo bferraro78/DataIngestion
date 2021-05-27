@@ -1,4 +1,6 @@
 using MediaData.Services;
+using MediaData.Services.DataReader;
+using MediaData.Services.Factory;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,12 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using MusicData.Services;
-using MusicData.Services.DataReader;
-using MusicData.Services.DataReader.DataHandlers;
-using MusicData.Services.Factory;
 
-namespace MusicData
+namespace MediaData
 {
     public class Startup
     {
@@ -29,6 +27,7 @@ namespace MusicData
             {
                 loggingBuilder.AddSeq();
             });
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -36,19 +35,12 @@ namespace MusicData
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MediaData", Version = "v1" });
             });
 
-            services.AddTransient<IMusicDataServiceFacade, MediaDataServiceFacade>();
-            services.AddTransient<IMusicDataProvider, MusicDataProvider>();
-            services.AddTransient<IMusicDataRetrieverFactory, MusicDataRetrieverFactory>();
+            services.AddTransient<IMediaDataServiceFacade, MediaDataServiceFacade>();
+            services.AddTransient<IMediaDataProvider, MediaDataProvider>();
+            services.AddTransient<IMediaDataRetrieverFactory, MediaDataRetrieverFactory>();
             services.AddTransient<IBulkElasticDataInjector, BulkElasticDataInjector>();
             services.AddScoped<ArtistDataReader>()
             .AddScoped<IMediaDataProxy, ArtistDataReader>(s => s.GetService<ArtistDataReader>());
-
-            services.AddSingleton<ILoggerFactory, LoggerFactory>();
-
-            //services.AddSingleton<IDataHandler, ArtistDataHandler>();
-            //services.AddSingleton<IDataHandler, ArtistCollectionDataHandler>();
-            //services.AddSingleton<IDataHandler, CollectionDataHandler>();
-            //services.AddSingleton<IDataHandler, CollectionMatchDataHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +50,7 @@ namespace MusicData
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MusicData v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MediaData v1"));
             }
 
             //app.UseHttpsRedirection();

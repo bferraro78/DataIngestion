@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace MusicData.Models.Response
+namespace MediaData.Models.Response
 {
     public class AlbumIndexResponse : BaseResponse
     {

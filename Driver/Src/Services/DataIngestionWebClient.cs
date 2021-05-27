@@ -30,15 +30,7 @@ namespace DataIngestion.Src.Services
             {
                 using (var client = new WebClient())
                 {
-                    //if (_enableLogging)
-                    //{
-                    //    _logger.LogInformation("WebClientTransactionId: {webClientTransactionId}, WebClientRequestUrl: {webClientRequestUrl}", transactionId, requestUrl);
-                    //}
                     var responseJson = client.DownloadString(url);
-                    //if (_enableLogging)
-                    //{
-                    //    _logger.LogInformation("WebClientTransactionId: {webClientTransactionId}, WebClientResponse: {webClientResponse}", transactionId, responseJson);
-                    //}
                     if (response != null)
                     {
                         response = JsonConvert.DeserializeObject<ApiResponse<TResponse>>(responseJson);
@@ -50,7 +42,6 @@ namespace DataIngestion.Src.Services
                 HanldeError(transactionId, response, ex);
             }
             return response;
-
         }
 
         private void HanldeError<TResponse>(Guid transactionId, ApiResponse<TResponse> response, WebException ex)
@@ -61,7 +52,6 @@ namespace DataIngestion.Src.Services
                     var resp = ex.Response as HttpWebResponse;
                     if (resp == null)
                     {
-                        //_logger.LogError("WebClientTransactionId: {webClientTransactionId}, WebClientResponse: {webClientResponse}, WebClientStatusCode: {webClientStatusCode}", transactionId, string.Empty);
                         response.ErrorMessage = _requestFailed;
                     }
                     else
@@ -70,7 +60,6 @@ namespace DataIngestion.Src.Services
                         using (var reader = new StreamReader(stream, Encoding.UTF8))
                         {
                             var responseText = reader.ReadToEnd();
-                            //_logger.LogError("WebClientTransactionId: {webClientTransactionId}, WebClientResponse: {webClientResponse}, WebClientStatusCode: {webClientStatusCode}", transactionId, responseText, resp.StatusCode);
                             if (string.IsNullOrEmpty(responseText))
                             {
                                 response.ErrorMessage = _requestFailed;
@@ -95,7 +84,6 @@ namespace DataIngestion.Src.Services
                 }
                 catch (Exception exception)
                 {
-                    //_logger.LogError(exception, "WebClientTransactionId: {webClientTransactionId}", transactionId);
                     response.ErrorMessage = _requestFailed;
                 }
             }

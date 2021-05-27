@@ -1,21 +1,21 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MusicData.Models.Response;
-using MusicData.Services;
+using MediaData.Models.Response;
+using MediaData.Services;
 using System.Threading.Tasks;
 
 
-namespace MusicData.Controllers
+namespace MediaData.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class MediaDataController : ControllerBase
     {
         private readonly ILogger<MediaDataController> _logger;
-        private readonly IMusicDataServiceFacade _serviceFacade;
+        private readonly IMediaDataServiceFacade _serviceFacade;
 
-        public MediaDataController(IMusicDataServiceFacade serviceFacade, ILogger<MediaDataController> logger)
+        public MediaDataController(IMediaDataServiceFacade serviceFacade, ILogger<MediaDataController> logger)
         {
             _logger = logger;
             _serviceFacade = serviceFacade;

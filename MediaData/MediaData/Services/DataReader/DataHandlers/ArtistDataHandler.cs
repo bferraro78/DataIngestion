@@ -1,39 +1,34 @@
 ﻿using MediaData.Constants;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MusicData.Models;
+using MediaData.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicData.Services.DataReader.DataHandlers
+namespace MediaData.Services.DataReader.DataHandlers
 {
-    public class ArtistDataHandler
+    public class ArtistDataHandler : DataHandler
     {
         private ILogger<ArtistDataHandler> _logger;
-        protected new HandlerTypeEnum HANDLER_TYPE = HandlerTypeEnum.ARTIST;
-        protected const char UNICODE_ENTRY_SPLIT = '\u0001';
-        protected const char UNICODE_ENTRY_NEWLINE = '\u0002';
-        protected const char SKIP_LINE = '#';
-
         public ArtistDataHandler(ILogger<ArtistDataHandler> logger)
         {
             _logger = logger;
         }
 
-        public  Task<IDictionary<string, List<Artist>>> Handle()
+        public  Task<IDictionary<string, List<Artist>>> Handle(string dataLocation)
         {
-            return Task.Run(() => GetArtists());
+            return Task.Run(() => GetArtists(dataLocation));
         }
 
 
-        private Task<IDictionary<string, List<Artist>>> GetArtists()
+        private Task<IDictionary<string, List<Artist>>> GetArtists(string dataLocation)
         {
             string line;
 
             // Read the file and display it line by line.  
-            string currentDir = Environment.CurrentDirectory + "\\Data\\Artist";
+            string currentDir = Environment.CurrentDirectory + dataLocation;
             System.IO.StreamReader file =
                 new(currentDir);
             IDictionary<string, List<Artist>> artists = new Dictionary<string, List<Artist>>();
@@ -78,10 +73,6 @@ namespace MusicData.Services.DataReader.DataHandlers
             }
             file.Close();
             return Task.FromResult(artists);
-        }
-        public HandlerTypeEnum GetHandleType()
-        {
-            return HANDLER_TYPE;
         }
     }
 }

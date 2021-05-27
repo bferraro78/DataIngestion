@@ -2,29 +2,29 @@ using MediaData.Constants;
 using MediaData.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using MusicData.Models;
-using MusicData.Models.Response;
-using MusicData.Services.Factory;
+using MediaData.Models;
+using MediaData.Models.Response;
+using MediaData.Services.Factory;
 using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MusicData.Services
+namespace MediaData.Services
 {
-    public interface IMusicDataProvider
+    public interface IMediaDataProvider
     {
         AlbumIndexResponse GetAlbumIndex();
     }
 
-    public class MusicDataProvider : IMusicDataProvider
+    public class MediaDataProvider : IMediaDataProvider
     {
-        private readonly ILogger<MusicDataProvider> _logger;
-        private readonly IMusicDataRetrieverFactory _factory;
+        private readonly ILogger<MediaDataProvider> _logger;
+        private readonly IMediaDataRetrieverFactory _factory;
         private readonly IBulkElasticDataInjector _bulkElasticDataInjector;
         private readonly IConfiguration _configuration;
 
-        public MusicDataProvider(ILogger<MusicDataProvider> logger, IMusicDataRetrieverFactory factory,
+        public MediaDataProvider(ILogger<MediaDataProvider> logger, IMediaDataRetrieverFactory factory,
             IBulkElasticDataInjector bulkElasticDataInjector, IConfiguration configuration)
         {
             _logger = logger;
@@ -33,20 +33,15 @@ namespace MusicData.Services
             _configuration = configuration;
         }
 
-
         public AlbumIndexResponse GetAlbumIndex()
         {
             var response = new AlbumIndexResponse();
             try
             {
                 var proxy = _factory.GetDataRetriever(DataReaderTypeEnum.ALBUM_DATA);
-                //proxy.SetHandlerType(HandlerTypeEnum.ARTIST);
-                var musicData = proxy.GetMusicData();
-
-                var albums = IndexDataConverter.CreateAlbumData(musicData);
+                var MediaData = proxy.GetMediaData();
+                var albums = IndexDataConverter.CreateAlbumData(MediaData);
                 _bulkElasticDataInjector.InjectAlbums(albums);
-
-                // TODO - unit tets
 
                 response.StatusCode = System.Net.HttpStatusCode.OK;
                 response.Data = new Models.Response.Index

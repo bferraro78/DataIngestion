@@ -1,4 +1,4 @@
-﻿namespace MusicData.Models
+﻿namespace MediaData.Models
 {
     public class Artist
     {

@@ -1,20 +1,20 @@
 using Microsoft.Extensions.Logging;
-using MusicData.Models.Response;
+using MediaData.Models.Response;
 
-namespace MusicData.Services
+namespace MediaData.Services
 {
-    public interface IMusicDataServiceFacade
+    public interface IMediaDataServiceFacade
     {
         AlbumIndexResponse GetAlbumIndex();
     }
 
-    public class MediaDataServiceFacade : IMusicDataServiceFacade
+    public class MediaDataServiceFacade : IMediaDataServiceFacade
     {
         private readonly ILogger<MediaDataServiceFacade> _logger;
-        private readonly IMusicDataProvider _provider;
+        private readonly IMediaDataProvider _provider;
 
 
-        public MediaDataServiceFacade(ILogger<MediaDataServiceFacade> logger, IMusicDataProvider provider)
+        public MediaDataServiceFacade(ILogger<MediaDataServiceFacade> logger, IMediaDataProvider provider)
         {
             _logger = logger;
             _provider = provider;

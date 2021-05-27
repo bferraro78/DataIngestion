@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace MusicData.Models.Response
+namespace MediaData.Models.Response
 {
     public abstract class BaseResponse
     {

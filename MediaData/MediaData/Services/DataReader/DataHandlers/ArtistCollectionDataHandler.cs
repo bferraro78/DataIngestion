@@ -1,34 +1,33 @@
 ﻿using MediaData.Constants;
 using Microsoft.Extensions.Logging;
-using MusicData.Models;
+using MediaData.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicData.Services.DataReader.DataHandlers
+namespace MediaData.Services.DataReader.DataHandlers
 {
     public class ArtistCollectionDataHandler : DataHandler
     {
         private readonly ILogger<ArtistCollectionDataHandler> _logger;
-        protected new HandlerTypeEnum HANDLER_TYPE = HandlerTypeEnum.ARTIST;
 
         public ArtistCollectionDataHandler(ILogger<ArtistCollectionDataHandler> logger)
         {
             _logger = logger;
         }
 
-        public Task<IDictionary<string, List<ArtistCollection>>> Handle()
+        public Task<IDictionary<string, List<ArtistCollection>>> Handle(string dataLocation)
         {
-            return Task.Run(() => GetArtistCollections());
+            return Task.Run(() => GetArtistCollections(dataLocation));
         }
 
-        private Task<IDictionary<string, List<ArtistCollection>>> GetArtistCollections()
+        private Task<IDictionary<string, List<ArtistCollection>>> GetArtistCollections(string dataLocation)
         {
             string line;
 
             // Read the file and display it line by line.  
-            string currentDir = Environment.CurrentDirectory+"\\Data\\artist_collection";
+            string currentDir = Environment.CurrentDirectory + dataLocation;
             System.IO.StreamReader file =
                 new(currentDir);
             IDictionary<string, List<ArtistCollection>> artistCollections = new Dictionary<string, List<ArtistCollection>>();
@@ -73,10 +72,5 @@ namespace MusicData.Services.DataReader.DataHandlers
             file.Close();
             return Task.FromResult(artistCollections);
         }
-
-        //public override HandlerTypeEnum GetHandleType()
-        //{
-        //    return HANDLER_TYPE;
-        //}
     }
 }
