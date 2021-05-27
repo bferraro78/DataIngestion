@@ -7,7 +7,7 @@ namespace Driver.Src.Services
 {
     public interface IMusicService
     {
-        void GetAlbumIndex();
+        IndexResponse GetAlbumIndex();
     }
     
     public class MediaService : IMusicService
@@ -30,15 +30,13 @@ namespace Driver.Src.Services
                 var requestUrl = _config["AppSettings:LocalFileServiceUrl"];
                 var indexResponse = _client.Get<IndexResponse>($"{requestUrl}/MediaData/GetAlbumIndex");
 
-                if (string.IsNullOrEmpty(indexResponse.ErrorMessage) && indexResponse.Data != null)
+                if (indexResponse.Data != null)
                 {
+                    if (!string.IsNullOrEmpty(indexResponse.ErrorMessage))
+                    {
+                        indexResponse.Data.ErrorMessage = indexResponse.ErrorMessage;
+                    }
                     return indexResponse.Data;
-                }
-                else
-                { 
-                    // TODO - Error Handle (log ErrorMessage)
-                    return ind
-
                 }
             }
             else
@@ -49,10 +47,8 @@ namespace Driver.Src.Services
                 // 3. Query tables to create Album list object
                 // 4. Insert into Elastic Index
                 // 5. Return IndexUrl
-                return null;
             }
-            return "There was an error retrieving your elastic index";
-            return indexResponse;
+            return new IndexResponse { ErrorMessage = "There was an error retrieving your elastic index" };
         }
     }
 }

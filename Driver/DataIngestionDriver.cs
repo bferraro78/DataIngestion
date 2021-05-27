@@ -13,7 +13,16 @@ namespace Driver
 
         public void Run()
         {
-            _musicService.GetAlbumIndex();
+            var indexResponse = _musicService.GetAlbumIndex();
+            if (!string.IsNullOrEmpty(indexResponse.ErrorMessage))
+            {
+                Console.WriteLine($"Here is your Album Index: {indexResponse.ErrorMessage}");
+            }
+            else
+            { 
+                Console.WriteLine($"Here is your Album Index: {indexResponse.IndexUrl}");
+                Console.WriteLine($"Here is your Album Index: {indexResponse.DashboardUrl}");
+            }
         }
     }
 }
