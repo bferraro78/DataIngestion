@@ -9,5 +9,8 @@ namespace DataIngestion.Src.Responses
     public class IndexResponse
     {
         public string IndexUrl { get; set; }
+        public string DashboardUrl { get; set; }
+        public string ErrorMessage { get; set; }
+
     }
 }

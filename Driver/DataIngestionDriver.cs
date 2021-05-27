@@ -13,8 +13,7 @@ namespace Driver
 
         public void Run()
         {
-            var elasticIndex = _musicService.GetAlbumIndex();
-            Console.WriteLine($"Here is your Album Index: {elasticIndex}");
+            _musicService.GetAlbumIndex();
         }
     }
 }

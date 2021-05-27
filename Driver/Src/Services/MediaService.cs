@@ -7,13 +7,11 @@ namespace Driver.Src.Services
 {
     public interface IMusicService
     {
-        //Server=tcp:linkfiredata.database.windows.net,1433;Initial Catalog=MusicData;Persist Security Info=False;User ID=ultraski78;Password=Soad2441;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
-        string GetAlbumIndex();
+        void GetAlbumIndex();
     }
     
     public class MediaService : IMusicService
     {
-        private readonly string _url;
         private readonly IConfiguration _config;
         private readonly IDataIngestionWebClient _client;
 
@@ -25,7 +23,7 @@ namespace Driver.Src.Services
             _client = client;
         }
 
-        public string GetAlbumIndex()
+        public IndexResponse GetAlbumIndex()
         {
             if (_config["AppSettings:DataService"].Equals("LocalFile"))
             {
@@ -34,22 +32,27 @@ namespace Driver.Src.Services
 
                 if (string.IsNullOrEmpty(indexResponse.ErrorMessage) && indexResponse.Data != null)
                 {
-                    return indexResponse.Data.IndexUrl;
+                    return indexResponse.Data;
                 }
+                else
+                { 
+                    // TODO - Error Handle (log ErrorMessage)
+                    return ind
 
-                // TODO - Error Handle (log ErrorMessage)
-
+                }
             }
             else
-            { 
+            {
                 // Call DBService. Steps service would take:
                 // 1. Download Data (locally or from authoirty like google drive documents)
                 // 2. Populate Database tables
                 // 3. Query tables to create Album list object
                 // 4. Insert into Elastic Index
                 // 5. Return IndexUrl
+                return null;
             }
             return "There was an error retrieving your elastic index";
+            return indexResponse;
         }
     }
 }
