@@ -1,0 +1,3 @@
+#export_datecollection_idupcgridamg_album_id
+#primaryKey:collection_id
+#dbTypes:BIGINTBIGINTVARCHAR(200)VARCHAR(200)INTEGER

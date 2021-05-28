@@ -1,5 +1,6 @@
 ﻿using MediaData.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,12 @@ namespace MediaData.Services
         public string _elasticIndexUri;
         public string _albumIndex;
         private int BULK_DATA_SPLIT = 1000;
-
-        public BulkElasticDataInjector(IConfiguration configuration)
+        private ILogger<BulkElasticDataInjector> _logger;
+        public BulkElasticDataInjector(IConfiguration configuration, ILogger<BulkElasticDataInjector> logger)
         {
             _elasticIndexUri = configuration["ElasticConfiguration:Uri"];
             _albumIndex = configuration["ElasticInjectionProperties:albumIndex"];
+            _logger = logger;
         }
 
         public void InjectAlbums(List<Album> albums)
@@ -35,6 +37,10 @@ namespace MediaData.Services
             foreach (var albumsSection in splitAlbums)
             {
                 var r = client.Bulk(a => a.IndexMany(albumsSection));
+                if (!r.IsValid)
+                {
+                    _logger.LogError($"Something went wrong when injecting a bulk album set to the ElasticIndex: {r.ServerError.ToString()}");
+                }
             }
         }
 

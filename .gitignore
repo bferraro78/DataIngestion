@@ -15,9 +15,9 @@ bin/*
 bin
 obj
 
-collection
-artist
-collection_match
-artist_collection
+# collection
+# artist
+# collection_match
+# artist_collection
 
 MediaData/.vs/

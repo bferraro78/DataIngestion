@@ -1,0 +1,3 @@
+#export_datecollection_idnametitle_versionsearch_termsparental_advisory_idartist_display_nameview_urlartwork_urloriginal_release_dateitunes_release_datelabel_studiocontent_provider_namecopyrightp_linemedia_type_idis_compilationcollection_type_id
+#primaryKey:collection_id
+#dbTypes:BIGINTBIGINTVARCHAR(1000)VARCHAR(1000)VARCHAR(3000)INTEGERVARCHAR(1000)VARCHAR(1000)VARCHAR(1000)DATETIMEDATETIMEVARCHAR(1000)VARCHAR(1000)VARCHAR(4000)VARCHAR(4000)INTEGERBOOLEANINTEGER

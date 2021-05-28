@@ -1,0 +1,3 @@
+#export_dateartist_idcollection_idis_primary_artistrole_id
+#primaryKey:artist_idcollection_idrole_id
+#dbTypes:BIGINTBIGINTBIGINTBOOLEANINTEGER
