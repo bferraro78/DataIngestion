@@ -9,7 +9,7 @@ namespace MediaData.Services
     public static class IndexDataConverter
     {
 
-        public static List<Album> CreateAlbumData(ArtistDataModel data)
+        public static List<Album> CreateAlbumData(MediaDataModel data)
         {
             // Create Album objectBusiness Logic 
             List<Album> albums = new();

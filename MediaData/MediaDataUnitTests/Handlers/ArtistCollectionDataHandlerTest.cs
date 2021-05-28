@@ -35,7 +35,7 @@ namespace MediaDataUnitTests.Handlers
         {
             Task<IDictionary<string, List<ArtistCollection>>> readTask = new ArtistCollectionDataHandler(loggerFactory.Object.CreateLogger<ArtistCollectionDataHandler>()).Handle("\\..\\..\\..\\TestData\\artistCollectionGoodTestData.txt");
             Task.WhenAll(readTask);
-            var artistDataModel = new ArtistDataModel();
+            var artistDataModel = new MediaDataModel();
             artistDataModel.ArtistCollections = readTask.Result;
             Assert.True(artistDataModel.ArtistCollections.Count > 0);
             Assert.True(artistDataModel.ArtistCollections.ContainsKey(key));
@@ -52,7 +52,7 @@ namespace MediaDataUnitTests.Handlers
         {
             Task<IDictionary<string, List<ArtistCollection>>> readTask = new ArtistCollectionDataHandler(loggerFactory.Object.CreateLogger<ArtistCollectionDataHandler>()).Handle("\\..\\..\\..\\TestData\\artistCollectionGoodTestData.txt");
             Task.WhenAll(readTask);
-            var artistDataModel = new ArtistDataModel();
+            var artistDataModel = new MediaDataModel();
             artistDataModel.ArtistCollections = readTask.Result;
             Assert.True(artistDataModel.ArtistCollections.Count > 0);
             Assert.True(artistDataModel.ArtistCollections.ContainsKey(key));
@@ -64,7 +64,7 @@ namespace MediaDataUnitTests.Handlers
         {
             Task<IDictionary<string, List<ArtistCollection>>> readTask = new ArtistCollectionDataHandler(loggerFactory.Object.CreateLogger<ArtistCollectionDataHandler>()).Handle("\\..\\..\\..\\TestData\\artistCollectionEmptyTestData.txt");
             Task.WhenAll(readTask);
-            var artistDataModel = new ArtistDataModel();
+            var artistDataModel = new MediaDataModel();
             artistDataModel.ArtistCollections = readTask.Result;
             Assert.True(artistDataModel.ArtistCollections != null);
             Assert.True(artistDataModel.ArtistCollections.Count == 0);
@@ -79,7 +79,7 @@ namespace MediaDataUnitTests.Handlers
         {
             Task<IDictionary<string, List<ArtistCollection>>> readTask = new ArtistCollectionDataHandler(loggerFactory.Object.CreateLogger<ArtistCollectionDataHandler>()).Handle("\\..\\..\\..\\TestData\\artistCollectionBadFormatTestData.txt");
             Task.WhenAll(readTask);
-            var artistDataModel = new ArtistDataModel();
+            var artistDataModel = new MediaDataModel();
             artistDataModel.ArtistCollections = readTask.Result;
             Assert.True(artistDataModel.ArtistCollections.Count > 0);
             Assert.True(!artistDataModel.ArtistCollections.ContainsKey(key));

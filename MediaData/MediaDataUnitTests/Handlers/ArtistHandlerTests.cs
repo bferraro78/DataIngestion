@@ -37,7 +37,7 @@ namespace MediaDataUnitTests.Handlers
         {
             Task<IDictionary<string, List<Artist>>> readTask = new ArtistDataHandler(loggerFactory.Object.CreateLogger<ArtistDataHandler>()).Handle("\\..\\..\\..\\TestData\\artistGoodTestData.txt");
             Task.WhenAll(readTask);
-            var artistDataModel = new ArtistDataModel();
+            var artistDataModel = new MediaDataModel();
             artistDataModel.Artists = readTask.Result;
             Assert.True(artistDataModel.Artists.Count > 0);
             Assert.True(artistDataModel.Artists.ContainsKey(key));
@@ -49,7 +49,7 @@ namespace MediaDataUnitTests.Handlers
         {
             Task<IDictionary<string, List<Artist>>> readTask = new ArtistDataHandler(loggerFactory.Object.CreateLogger<ArtistDataHandler>()).Handle("\\..\\..\\..\\TestData\\artistEmptyTestData.txt");
             Task.WhenAll(readTask);
-            var artistDataModel = new ArtistDataModel();
+            var artistDataModel = new MediaDataModel();
             artistDataModel.Artists = readTask.Result;
             Assert.True(artistDataModel.Artists != null);
             Assert.True(artistDataModel.Artists.Count == 0);
@@ -64,7 +64,7 @@ namespace MediaDataUnitTests.Handlers
         {
             Task<IDictionary<string, List<Artist>>> readTask = new ArtistDataHandler(loggerFactory.Object.CreateLogger<ArtistDataHandler>()).Handle("\\..\\..\\..\\TestData\\artistBadFormatTestData.txt");
             Task.WhenAll(readTask);
-            var artistDataModel = new ArtistDataModel();
+            var artistDataModel = new MediaDataModel();
             artistDataModel.Artists = readTask.Result;
             Assert.True(artistDataModel.Artists.Count > 0);
             Assert.True(!artistDataModel.Artists.ContainsKey(key));

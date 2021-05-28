@@ -23,9 +23,9 @@ namespace MediaData.Services.DataReader
             _loggerFactory = loggerFactory;
         }
 
-        public ArtistDataModel GetMediaData()
+        public MediaDataModel GetMediaData()
         {
-            var model = new ArtistDataModel();
+            var model = new MediaDataModel();
 
             Task<IDictionary<string, List<Collection>>> readCollectionsTask = new CollectionDataHandler(_loggerFactory.CreateLogger<CollectionDataHandler>()).Handle(_configuration["DataLocation:collectionData"]);
             Task<IDictionary<string, List<Artist>>> readArtistsTask = new ArtistDataHandler(_loggerFactory.CreateLogger<ArtistDataHandler>()).Handle(_configuration["DataLocation:artistData"]);

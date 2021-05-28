@@ -1,9 +1,6 @@
 ﻿using MediaData.Constants;
 using MediaData.Services.DataReader;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MediaData.Services.Factory
 {

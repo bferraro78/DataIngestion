@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
-using MediaData.Models;
+﻿using MediaData.Models;
+using Microsoft.Extensions.Configuration;
 using Nest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MediaData.Services
 {
@@ -17,6 +16,7 @@ namespace MediaData.Services
     {
         public string _elasticIndexUri;
         public string _albumIndex;
+        private int BULK_DATA_SPLIT = 1000;
 
         public BulkElasticDataInjector(IConfiguration configuration)
         {
@@ -36,14 +36,13 @@ namespace MediaData.Services
             {
                 var r = client.Bulk(a => a.IndexMany(albumsSection));
             }
-
         }
 
         private List<List<TData>> Split<TData>(List<TData> source)
         {
             return source
                 .Select((x, i) => new { Index = i, Value = x })
-                .GroupBy(x => x.Index / 1000)
+                .GroupBy(x => x.Index / BULK_DATA_SPLIT)
                 .Select(x => x.Select(v => v.Value).ToList())
                 .ToList();
         }

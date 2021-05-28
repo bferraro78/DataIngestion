@@ -6,6 +6,6 @@ namespace MediaData.Services
 {
     public interface IMediaDataProxy
     {
-        ArtistDataModel GetMediaData();
+        MediaDataModel GetMediaData();
     }
 }
