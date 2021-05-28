@@ -1,5 +1,4 @@
-# DataIngestion
-Linkfire Data Ingestion Project
+# Linkfire Data Ingestion Project
 
 ### Prerequisites:
 - Docker
