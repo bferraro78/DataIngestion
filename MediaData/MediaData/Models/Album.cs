@@ -27,27 +27,6 @@ namespace MediaData.Models
         public string ImageUrl { get; set; }
         [DataMember(Name="artists")]
         public List<ArtistAlbum> Artists { get; set; }
-
-
-        /*
-         {
-            "id": "1255407551", // collection_id - Collection?
-            "name": "Nishana - Single", // name - Collection
-            "url": "http://ms.com/album/nishana-single/1255407551?uo=5", // view_url - Collection
-            "upc": "191061793557", // collection match
-            "releaseDate": "2017-06-10T00:00:00", // original_release_date - Collection ?
-            "isCompilation": false, // Collection
-            "label": "Aark Records", // label_studio collection
-            "imageUrl": "http://img.com/image/thumb/Music117/v4/92/b8/51/92b85100-13c8-8fa4-0856-bb27276fdf87/191061793557.jpg/170x170bb.jpg",// artwork url collection
-            "artists": [
-              {
-                "id": "935585671",
-                "name": "Anmol Dhaliwal"
-              }
-            ]
-          }
-         */
-
     }
 
     [DataContract]
