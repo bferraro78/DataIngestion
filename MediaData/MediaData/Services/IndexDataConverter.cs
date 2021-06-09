@@ -53,14 +53,17 @@ namespace MediaData.Services
                 if (data.ArtistCollections.ContainsKey(album.Id))
                 {
                     var artistsInvolved = data.ArtistCollections[album.Id];
-                    artistsInvolved = artistsInvolved.Distinct().ToList();
+                    /* Implements IEquitable - get Distinct artist list (no duplicates) 
+                       One artistId in same collection, with different roles (producer / singer)
+                     */
+                    artistsInvolved = artistsInvolved.Distinct().ToList(); 
                     var artists = new List<ArtistAlbum>();
                     foreach (var artistInvolved in artistsInvolved)
                     {
                         var artistId = artistInvolved.ArtistId;
-                        if (data.Artists.ContainsKey(artistId))
+                        if (data.Artists.ContainsKey(artistId)) // O(1)
                         {
-                            var existingArtist = data.Artists[artistId].FirstOrDefault(); // Only one artistId associated to an artist
+                            var existingArtist = data.Artists[artistId].FirstOrDefault(); // Only one artistId associated to an artist 
                             artists.Add(new ArtistAlbum { Id = artistId, Name = existingArtist.Name });
                         }
                     }

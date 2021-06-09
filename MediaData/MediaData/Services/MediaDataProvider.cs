@@ -39,7 +39,7 @@ namespace MediaData.Services
             try
             {
                 var proxy = _factory.GetDataRetriever(DataReaderTypeEnum.ALBUM_DATA);
-                var MediaData = proxy.GetMediaData();
+                var MediaData = proxy.GetMediaData(); // data needed to create album
                 var albums = IndexDataConverter.CreateAlbumData(MediaData);
                 _bulkElasticDataInjector.InjectAlbums(albums);
 
